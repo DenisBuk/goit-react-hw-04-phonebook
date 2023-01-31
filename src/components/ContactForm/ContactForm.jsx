@@ -1,34 +1,31 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Button from "../Button";
 import css from "./ContactForm.module.css";
 
-class ContactForm extends Component { 
-    state = {
-        name: "",
-        number: "", 
+function ContactForm({ addContact }) {
+    const [name, setName] = useState("");
+    const [number, setNumber] = useState("");
+
+    const handleInputChange = ({ currentTarget: { name, value } }) => {
+        switch (name) { 
+            case "name":
+                setName(value);
+                break;
+            case "number":
+                setNumber(value);
+                break;
+            default:
+                return;
+        }
     };
 
-    handleInputChange = (e) => { 
-        const { name, value } = e.currentTarget;
-        this.setState({ [name]: value});
+    const onBtnClick = (e) => {
+        e.preventDefault();
+        addContact(name, number);
+        setName("");
+        setNumber("");
     };
-
-    onBtnClick = (evt) => {
-        evt.preventDefault();
-        const { name, number } = this.state;
-        this.props.addContact(name, number);
-        this.setState({
-            name: "",
-            number: "",
-        });
-
-    };
-
-
-render() { 
-    const { handleInputChange, onBtnClick } = this;
-    const { name, number } = this.state;
 
     return (
         <form onSubmit={onBtnClick}>
@@ -64,7 +61,6 @@ render() {
             </label>
         </form>
     );
-}
 }
 
 ContactForm.propTypes = {
